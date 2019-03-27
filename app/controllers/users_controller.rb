@@ -1,5 +1,8 @@
 class UsersController < ApplicationController
   
+  def index
+    @users = User.where(activated: true)
+  end
   def new
     @user = User.new
   end
@@ -12,7 +15,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params) # Not the final implementation!
     if @user.save
       flash[:success] = "Welcome to Private Bookings!"
-      redirect_to @user
+      log_in(@user)
+      redirect_to root_url
       # Handle a successful save.
     else
       render 'new'
@@ -22,6 +26,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:name)
+    params.require(:user).permit(:name, :email)
   end
 end
